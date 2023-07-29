@@ -18,14 +18,15 @@
     
 </div>
 
-This is a fresh game that was developed using the **Panda3D** game engine and **Python** language in the **PyCharm** IDE (I don't know why you need this information).
-At the moment, the game has a fairly large audience and a large daily online (1000+ players are stable). In general, there seems to be nothing more remarkable here, it's time to start our journey..
+TPS game made in Panda3D + PySimpleGUI
 
 # ⌨️ Installation
+
+Game supports Ubunutu & Arch Linux (Windows 10 & 11 soon)
+
 ## 🖥️ Linux
 In the **Linux** operating system, everything is simple: first, install all the packages `pip install -r requirements.txt`, write to the terminal `git clone https://github.com/WennMarcoRTX/droidgame3d.git`, then `cd droidgame3d`, we write if you have Cython, then `cython ./game.pyx`, and if just Python, then ` python3 ./game.py`, if you have C, then `c ./game.c` (an assembly for Go, Ruby and C ++ will be released soon, wait;) ).
-## 👨‍💻 Windows
-For **Windows** we have a separate assembly with *.exe* and *.dll* files, which are always included when a new version is released, but if you want to play the game with the source code, then the installation is the same as y **Linux**, congratulations. 
+
 
 # 🇨 Build to C
 To compile to a .C file, you must enter the command from the game directory:
@@ -43,20 +44,18 @@ bash build.sh
 Done! Enjoy to play! 😉
 
 # 🚙 To start
-For play you want start TCP server using this command:
+
+If you want to play online:
 
 ```
 python3 server/server.py
 ```
 
-After that, you can start game(*NOTE: DO NOT STOP TCP SERVER!*) using this command:
+And change 88 string in game.py ``server_enabled = False`` to ``server_enabled = True``.
+
+After that, you can start game using this command:
 ```
 python3 game.py
-```
-
-Or, use Cython:
-```
-cython game.pyx
 ```
 
 # ⌨️ Management
