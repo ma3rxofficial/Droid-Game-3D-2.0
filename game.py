@@ -25,7 +25,6 @@ def only_for_error():
     DEFAULT_PORT_ = 9099  # порт
     VERSION_ = VERSION  # версия
 
-
 try:
 
     from panda3d.core import * # ядро игрового движка
@@ -85,18 +84,23 @@ try:
 
     print('Normal importing modules [OK]')  # печатаем что нормально загрузились модули
 
+
+    server_enabled = False    
+
+
     config = json.load(open("./RES/addon_config.json"))  # загружаем конфиг аддона
     addon_classes = []  # классы аддонов
 
     message(message=f'Welcome to Droid Game {VERSION}')  # сообщение
     # подключение к серверу
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создаем обьект портала для подключения
-    s.connect((sites[0], DEFAULT_PORT))  # подключаемся к серверу
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # делаем коннект к серверу многоразовый
-    s.send(
-        f'Connected by Droid Game {VERSION} and IP {IP_USER}:{DEFAULT_PORT}'.encode())  # посылаем на сервер сообщение
+    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создаем обьект портала для подключения
+    # s.connect((sites[0], DEFAULT_PORT))  # подключаемся к серверу
+    # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # делаем коннект к серверу многоразовый
+    # s.send(
+    #    f'Connected by Droid Game {VERSION} and IP {IP_USER}:{DEFAULT_PORT}'.encode())  # посылаем на сервер сообщение
 
     loadPrcFileData('', 'show-frame-rate-meter true')  # показываем количество кадров в секунду
+    print("Framerate initialize [OK]") # сообщаем в консоль о загрузке счетчика кадров
     loadPrcFileData(
         "",
         "audio-library-name "
@@ -149,34 +153,11 @@ try:
         return message  # возвращаем сообщение
 
 
-    # проверка обновлений(с ассинхроностью)
-    async def listening_updates(server_updates):
-        while True:
-            link = server_updates  # ссылка
-            f = requests.get(link)  # получаем текст
-            if True:  # текст будет либо True либо False
-                update = 'it"s not work, sorry('
-                vers  = 'vers here'
-                await message(f'''
-                        UPDATE! Added: {update}
-                                Number update: {vers}
-
-                                    Thanks for playing :)
-                        ''')  # сообщение об обновлении
-
-
-
-    # отправка сообщения
-    def sending(msg):
-        '''отправляет сообщение'''
-        s.send(str(msg).encode())  # отправка в байтах
-
-
     def showHelpInfo():
         # Говорим пользователю об использованиu
         print('Droid Game ' + VERSION + ' - ' + COPYRIGHT)  # информация о игре
         print('Использование(Usage):')  # использование
-        print('-d \t\t\Режим разробoтчика(Developer mode)')  # тут всё написано
+        print('-d \t\t\Режим разрабoтчика(Developer mode)')  # тут всё написано
         print('-l \t\t\Скачать уровни(Download levels)')  # и тут тоже
         sys.exit()  # выходим
 
@@ -193,7 +174,6 @@ try:
     elif '-l' in sys.argv:
         downloading()
 
-
     # запуск с ассинхроностью
     async def start():
         droid = DroidShooter()  # обьект игры
@@ -204,6 +184,16 @@ try:
     if USERNAME in MODS:
         sending(f'Moderator!  {IP_USER}:{DEFAULT_PORT}')  # отправляем на сервер сообщение
 
+
+    # отправка сообщения
+    def sending(msg):
+        '''отправляет сообщение'''
+
+        if server_enabled:  # если режим сервера включен...
+            print(f"Sending message to server {str(msg)}")  # сообщаем в консоль о отправке на сервер сообщения
+            s.send(str(msg).encode())  # отправка в байтах
+        else:  # а если режим сервера выключен, выключаем функцию
+            return
 
     # запуск всех задач с асинхроностью
     async def main():
@@ -2575,7 +2565,10 @@ try:
 
             # проверим, включена ли одиночная игра
             if not self.single:
-                s.close()  # закрываем подключение
+                if server_enabled:
+                    print("Connection to server was closed")
+                    s.close()  # закрываем подключение
+                print("Connection to server wasn't close(server isn't enabled)")
 
             self.exiting = True  # поставим, что уже вышли из игры
 
@@ -2711,11 +2704,6 @@ try:
 
             return task.cont  # возвращаем задачу
 
-        # прочие важные функции движка
-        def important_func(self):
-            '''тут будет какая-то важная функция'''
-            pass
-
     for addon_class in addon_classes:  # проходимся по всем аддонам
         sending(f'Loading addons! {IP_USER}:{DEFAULT_PORT}')  # отправляем сообщение на сервер
         exec("addon_class().run()")  # выполняем их
@@ -2730,6 +2718,7 @@ except Exception as e:
 
     if not e == "[Errno 9] Неправильный дескриптор файла":
         only_for_error()  # если ошибка
+        print(f"CRASHED {e}") # сообщение о вылете в консоль
         message(f'''
                 [EN] Droid Game {VERSION_}(running on {IP_USER_}:{DEFAULT_PORT_}) is down. 
                 Restart the game and try again. If the error persists -
