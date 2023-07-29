@@ -25,7 +25,7 @@ TPS game made in Panda3D + PySimpleGUI
 Game supports Ubunutu & Arch Linux (Windows 10 & 11 soon)
 
 ## 🖥️ Linux
-In the **Linux** operating system, everything is simple: first, install all the packages `pip install -r requirements.txt`, write to the terminal `git clone https://github.com/WennMarcoRTX/droidgame3d.git`, then `cd droidgame3d`, we write if you have Cython, then `cython ./game.pyx`, and if just Python, then ` python3 ./game.py`, if you have C, then `c ./game.c` (an assembly for Go, Ruby and C ++ will be released soon, wait;) ).
+In the **Linux** operating system, everything is simple: first, install all the packages `pip install -r requirements.txt`, write to the terminal `git clone https://github.com/ma3rxofficial/Droid-Game-3D-2.0`, then `cd droid-game-3d-2.0`, and finnaly: ` python3 ./game.py`, if you have C, then `c ./game.c` ).
 
 
 # 🇨 Build to C
