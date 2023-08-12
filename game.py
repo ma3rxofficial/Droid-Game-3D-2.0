@@ -92,6 +92,9 @@ try:
     addon_classes = []  # классы аддонов
 
     message(message=f'Welcome to Droid Game {VERSION}')  # сообщение
+
+    print(f"Welcome message. Loaded version {VERSION}")
+    
     # подключение к серверу
     # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создаем обьект портала для подключения
     # s.connect((sites[0], DEFAULT_PORT))  # подключаемся к серверу
@@ -108,11 +111,15 @@ try:
     )  # система звука в зависимости от вашей ОС
     loadPrcFileData("", "threading-model Cull/Draw")  # используем многопоточный рендер
 
+    print("Panda3D settings are loaded!")
+
 
     def load_profile(filename_p):
         '''загружаем профиль'''
         with open(filename_p, "r") as f:  # загружаем файл с профилем
             for line in f:  # читаем линии в файле
+                print("Profile loading:")
+                print(line)
                 return line  # возвращаем линию(-и)
 
 
@@ -130,6 +137,8 @@ try:
     USERNAME = load_profile('./profile/username.txt') + str(random.randrange(0, 10000))  # загружаем имя пользователя
     RATING = int(load_profile('./profile/rating.txt'))  # загружаем рейтинг пользователя
     STATUS = load_profile('./profile/status.txt')  # загружаем статус пользователя
+
+    print(f"{USERNAME} with {RATING} rating and {STATUS} status joined!")
 
     def receiveTextViaSocket(sock):
         '''Получает сообщение с сервера'''
